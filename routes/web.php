@@ -13,4 +13,5 @@
 
 Route::get('/', 'PagesController@root')->name('root');
 
-Auth::routes();
+// 启用与邮箱验证相关的路由（验证邮箱页面、重发验证邮件页面等）
+Auth::routes(['verify' => true]);
