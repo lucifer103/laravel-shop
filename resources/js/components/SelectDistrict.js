@@ -79,7 +79,7 @@ Vue.component('select-district', {
         return;
       }
       // 从当前省列表中找到与数组第一个元素同名的项的索引
-      const provinceId = _findKey(this.provinces, o => 0 === value[0]);
+      const provinceId = _.findKey(this.provinces, o => o === value[0]);
       // 没找到，清空省的值
       if (!provinceId) {
         this.provinceId = '';
