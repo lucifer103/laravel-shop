@@ -12,7 +12,9 @@
 */
 
 Route::redirect('/', '/products')->name('root');
+
 Route::get('products', 'ProductsController@index')->name('products.index');
+Route::get('products/{product}', 'ProductsController@show')->name('products.show');
 
 // 启用与邮箱验证相关的路由（验证邮箱页面、重发验证邮件页面等）
 Auth::routes(['verify' => true]);
