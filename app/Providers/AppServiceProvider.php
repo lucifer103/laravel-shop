@@ -18,7 +18,7 @@ class AppServiceProvider extends ServiceProvider
         // 往服务容器中诸如一个名为 alipay 的单例对象
         $this->app->singleton('alipay', function () {
             $config = config('pay.alipay');
-            $config['notify_url'] = 'http://requestbin.net/r/1ogc7vr1';
+            $config['notify_url'] = 'https://en9c7vhfxoesi.x.pipedream.net';
             $config['return_url'] = route('payment.alipay.return');
             // 判断当前项目运行环境是否为线上环境
             if (app()->environment() !== 'production') {
@@ -33,6 +33,7 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton('wechat_pay', function () {
             $config = config('pay.wechat');
+            $config['notify_url'] = 'https://en9c7vhfxoesi.x.pipedream.net';
             if (app()->environment() !== 'production') {
                 $config['log']['level'] = Logger::DEBUG;
             } else {
