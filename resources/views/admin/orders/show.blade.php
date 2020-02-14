@@ -10,51 +10,54 @@
   <div class="box-body">
     <table class="table table-bordered">
       <tbody>
+      <tr>
+        <td>买家：</td>
+        <td>{{ $order->user->name }}</td>
+        <td>支付时间：</td>
+        <td>{{ $order->paid_at->format('Y-m-d H:i:s') }}</td>
+      </tr>
+      <tr>
+        <td>支付方式：</td>
+        <td>{{ $order->payment_method }}</td>
+        <td>支付渠道单号：</td>
+        <td>{{ $order->payment_no }}</td>
+      </tr>
+      <tr>
+        <td>收货地址：</td>
+        <td
+          colspan="3">{{ $order->address['address'] }} {{ $order->address['zip'] }} {{ $order->address['contact_name'] }} {{ $order->address['contact_phone'] }}</td>
+      </tr>
+      <tr>
+        <td rowspan="{{ $order->items->count() + 1 }}">商品列表</td>
+        <td>商品名称</td>
+        <td>单价</td>
+        <td>数量</td>
+      </tr>
+      @foreach($order->items as $item)
         <tr>
-          <td>买家：</td>
-          <td>{{ $order->user->name }}</td>
-          <td>支付时间：</td>
-          <td>{{ $order->paid_at->format('Y-m-d H:i:s') }}</td>
+          <td>{{ $item->product->title }} {{ $item->productSku->title }}</td>
+          <td>￥{{ $item->price }}</td>
+          <td>{{ $item->amount }}</td>
         </tr>
-        <tr>
-          <td>支付方式：</td>
-          <td>{{ $order->payment_method }}</td>
-          <td>支付渠道单号：</td>
-          <td>{{ $order->payment_no }}</td>
-        </tr>
-        <tr>
-          <td>收货地址：</td>
-          <td colspan="3">{{ $order->address['address'] }} {{ $order->address['zip'] }} {{ $order->address['contact_name'] }} {{ $order->address['contact_phone'] }}</td>
-        </tr>
-        <tr>
-          <td rowspan="{{ $order->items->count() + 1 }}">商品列表</td>
-          <td>商品名称</td>
-          <td>单价</td>
-          <td>数量</td>
-        </tr>
-        @foreach($order->items as $item)
-          <tr>
-            <td>{{ $item->product->title }} {{ $item->productSku->title }}</td>
-            <td>￥{{ $item->price }}</td>
-            <td>{{ $item->amount }}</td>
-          </tr>
-        @endforeach
-        <tr>
-          <td>订单金额：</td>
-          <td>￥{{ $order->total_amount }}</td>
-          <td>发货状态：</td>
-          <td>{{ \App\Models\Order::$shipStatusMap[$order->ship_status] }}</td>
-        </tr>
-        {{-- 订单发货开始 --}}
-        {{-- 如果订单未发货，展示发货表单 --}}
-        @if($order->ship_status === \App\Models\Order::SHIP_STATUS_PENDING)
+      @endforeach
+      <tr>
+        <td>订单金额：</td>
+        <td>￥{{ $order->total_amount }}</td>
+        <td>发货状态：</td>
+        <td>{{ \App\Models\Order::$shipStatusMap[$order->ship_status] }}</td>
+      </tr>
+      {{-- 订单发货开始 --}}
+      {{-- 如果订单未发货，展示发货表单 --}}
+      @if($order->ship_status === \App\Models\Order::SHIP_STATUS_PENDING)
+        @if($order->refund_status !== \App\Models\Order::REFUND_STATUS_SUCCESS)
           <tr>
             <td colspan="4">
               <form action="{{ route('admin.orders.ship', [$order->id]) }}" method="post" class="form-inline">
                 {{ csrf_field() }}
                 <div class="form-group {{ $errors->has('express_company') ? 'has-error' : '' }}">
                   <label for="express_company" class="control-label">物流公司：</label>
-                  <input type="text" id="express_company" name="express_company" value="" class="form-control" placeholder="输入物流公司">
+                  <input type="text" id="express_company" name="express_company" value="" class="form-control"
+                         placeholder="输入物流公司">
                   @if ($errors->has('express_company'))
                     @foreach($errors->get('express_company') as $msg)
                       <span class="help-block">{{ $msg }}</span>
@@ -74,29 +77,31 @@
               </form>
             </td>
           </tr>
-        @else
-          {{-- 否则显示物流公司和物流单号 --}}
-          <tr>
-            <td>物流公司：</td>
-            <td>{{ $order->ship_data['express_company'] }}</td>
-            <td>物流单号：</td>
-            <td>{{ $order->ship_data['express_no'] }}</td>
-          </tr>
         @endif
-        {{-- 订单发货结束 --}}
-        @if($order->refund_status !== \App\Models\Order::REFUND_STATUS_PENDING)
-          <tr>
-            <td>退款状态：</td>
-            <td colspan="2">{{ \App\Models\Order::$refundStatusMap[$order->refund_status] }}，理由：{{ $order->extra['refund_reason'] }}</td>
-            <td>
-              {{-- 如果订单退款状态是已申请，则展示处理按钮 --}}
-              @if($order->refund_status === \App\Models\Order::REFUND_STATUS_APPLIED)
-                <button class="btn btn-sm btn-success" id="btn-refund-agree">同意</button>
-                <button class="btn btn=sm btn-danger" id="btn-refund-disagree">不同意</button>
-              @endif
-            </td>
-          </tr>
-        @endif
+      @else
+        {{-- 否则显示物流公司和物流单号 --}}
+        <tr>
+          <td>物流公司：</td>
+          <td>{{ $order->ship_data['express_company'] }}</td>
+          <td>物流单号：</td>
+          <td>{{ $order->ship_data['express_no'] }}</td>
+        </tr>
+      @endif
+      {{-- 订单发货结束 --}}
+      @if($order->refund_status !== \App\Models\Order::REFUND_STATUS_PENDING)
+        <tr>
+          <td>退款状态：</td>
+          <td colspan="2">{{ \App\Models\Order::$refundStatusMap[$order->refund_status] }}
+            ，理由：{{ $order->extra['refund_reason'] }}</td>
+          <td>
+            {{-- 如果订单退款状态是已申请，则展示处理按钮 --}}
+            @if($order->refund_status === \App\Models\Order::REFUND_STATUS_APPLIED)
+              <button class="btn btn-sm btn-success" id="btn-refund-agree">同意</button>
+              <button class="btn btn=sm btn-danger" id="btn-refund-disagree">不同意</button>
+            @endif
+          </td>
+        </tr>
+      @endif
       </tbody>
     </table>
   </div>
@@ -115,7 +120,7 @@
         cancelButtonText: '取消',
         showLoaderOnConfirm: true,
         preConfirm: function (inputValue) {
-          if(!inputValue) {
+          if (!inputValue) {
             swal('理由不能为空', '', 'error')
             return false;
           }
@@ -138,7 +143,43 @@
         allowOutsideClick: false
       }).then(function (ret) {
         // 如果用户点击了『取消』按钮
-        if(ret.dismiss === 'cancel') {
+        if (ret.dismiss === 'cancel') {
+          return;
+        }
+        swal({
+          title: '操作成功',
+          type: 'success'
+        }).then(function () {
+          // 用户点击 swal 上的按钮时刷新页面
+          location.reload();
+        });
+      });
+    });
+    // 同意 按钮的点击事件
+    $('#btn-refund-agree').click(function () {
+      swal({
+        title: '确认要将款项退还给用户？',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        showLoaderOnConfirm: true,
+        preConfirm: function () {
+          return $.ajax({
+            url: '{{ route('admin.orders.handle_refund', [$order->id]) }}',
+            type: 'POST',
+            data: JSON.stringify({
+              // 代表同意退款
+              agree: true,
+              _token: LA.token,
+            }),
+            contentType: 'application/json',
+          });
+        },
+        allowOutsideClick: false
+      }).then(function (ret) {
+        // 如果用户点击了『取消』按钮，则不做任何操作
+        if (ret.dismiss === 'cancel') {
           return;
         }
         swal({
