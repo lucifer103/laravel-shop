@@ -15,7 +15,7 @@ class OrdersSeeder extends Seeder
     public function run()
     {
         // 获取 Faker 实例
-        $faker->app(Faker\Generator::class);
+        $faker = app(Faker\Generator::class);
         // 创建 100 笔订单
         $orders = factory(Order::class, 100)->create();
         // 被购买的商品，用于后面更新商品销量和评分
@@ -28,7 +28,7 @@ class OrdersSeeder extends Seeder
                 'rating' => $order->reviewed ? random_int(1, 5) : null,
                 'review' => $order->reviewed ? $faker->sentence : null,
                 // 评价时间不能早于支付时间
-                'reviewed_at' => $order->reviewed ? $faker->dateTimeBwtween($order->paid_at) : null,
+                'reviewed_at' => $order->reviewed ? $faker->dateTimeBetween($order->paid_at) : null,
             ]);
 
             // 计算总价
