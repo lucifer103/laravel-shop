@@ -11,6 +11,8 @@
 |
 */
 
+Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
+
 Route::redirect('/', '/products')->name('root');
 
 Route::get('products', 'ProductsController@index')->name('products.index');
