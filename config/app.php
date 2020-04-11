@@ -126,6 +126,8 @@ return [
     // 关闭未支付订单的延迟时间
     'order_ttl' => 1800,
 
+    'ngrok_url' => env('NGROK_URL'),
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
