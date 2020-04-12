@@ -20,7 +20,7 @@ class CreateInstallmentItemsTable extends Migration
             $table->unsignedBigInteger('sequence')->comment('还款顺序编号');
             $table->decimal('base')->comment('当前本金');
             $table->decimal('fee')->comment('当前手续费');
-            $table->decimal('find')->nullable()->comment('当前逾期费');
+            $table->decimal('fine')->nullable()->comment('当前逾期费');
             $table->dateTime('due_date')->comment('还款截止日期');
             $table->dateTime('paid_at')->nullable()->comment('还款日期');
             $table->string('payment_method')->nullable()->comment('还款支付平台');
