@@ -42,7 +42,7 @@ class FinishCrowdfunding extends Command
      */
     public function handle()
     {
-        CrowdfundingProduct::quert()
+        CrowdfundingProduct::query()
             // 众筹结束时间早于当前时间
             ->where('end_at', '<=', Carbon::now())
             // 众筹状态为众筹中
