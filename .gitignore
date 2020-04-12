@@ -17,4 +17,5 @@ yarn-error.log
 /public/fonts
 
 /.idea
+/.vscode
 /resources/wechat_pay
