@@ -10,10 +10,12 @@ class Product extends Model
 {
     const TYPE_NORMAL = 'normal';
     const TYPE_CROWDFUNDING = 'crowdfunding';
+    const TYPE_SECKILL = 'seckill';
 
     public static $typeMap = [
         self::TYPE_NORMAL => '普通商品',
         self::TYPE_CROWDFUNDING => '众筹商品',
+        self::TYPE_SECKILL => '秒杀商品',
     ];
 
     protected $fillable = [
@@ -116,5 +118,10 @@ class Product extends Model
     {
         // orderByRaw 可以让我们用原生的 SQL 来给查询结果排序
         return $query->whereIn('id', $ids)->orderByRaw(sprintf("FIND_IN_SET(id, '%s')", join(',', $ids)));
+    }
+
+    public function seckill()
+    {
+        return $this->hasOne(SeckillProduct::class);
     }
 }
