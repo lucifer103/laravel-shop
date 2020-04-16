@@ -111,4 +111,10 @@ class Product extends Model
 
         return $arr;
     }
+
+    public function scopeByIds($query, $ids)
+    {
+        // orderByRaw 可以让我们用原生的 SQL 来给查询结果排序
+        return $query->whereIn('id', $ids)->orderByRaw(sprintf("FIND_IN_SET(id, '%s')", join(',', $ids)));
+    }
 }
