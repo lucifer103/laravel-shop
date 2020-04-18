@@ -116,8 +116,13 @@ return [
 
     'hosts' => [
         'shop.learnku.fit' => [
+            // 指定部署目录
             'deploy_path' => '/www/wwwroot/laravel-shop',
-            'user' => 'root',
+            // 使用 deployer 账号登录
+            'user' => 'deployer',
+            // 指定登录密钥文件路径
+            'identityFile' => '~/.ssh/deployer',
+            'become' => 'deployer',
         ],
     ],
 
@@ -148,7 +153,7 @@ return [
     */
 
     'include' => [
-        //
+        'deploy.php'
     ],
 
     /*
