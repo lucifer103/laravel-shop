@@ -1,17 +1,26 @@
 <?php
 
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use App\Exceptions\CouponCodeUnavailableException;
-use App\Models\User;
 
 class CouponCode extends Model
 {
     // 用常量的方式定义支持的优惠券类型
     const TYPE_FIXED = 'fixed';
+
     const TYPE_PERCENT = 'percent';
 
     public static $typeMap = [
@@ -57,13 +66,13 @@ class CouponCode extends Model
         $str = '';
 
         if ($this->min_amount > 0) {
-            $str = '满 ' . str_replace('.00', '', $this->min_amount);
+            $str = '满 '.str_replace('.00', '', $this->min_amount);
         }
-        if ($this->type === self::TYPE_PERCENT) {
-            return $str . ' 优惠 ' . str_replace('.00', '', $this->value) . ' %';
+        if (self::TYPE_PERCENT === $this->type) {
+            return $str.' 优惠 '.str_replace('.00', '', $this->value).' %';
         }
 
-        return $str . ' 减 ' . str_replace('.00', '', $this->value);
+        return $str.' 减 '.str_replace('.00', '', $this->value);
     }
 
     public function checkAvailable(User $user, $orderAmount = null)
@@ -108,7 +117,7 @@ class CouponCode extends Model
     public function getAdjustedPrice($orderAmount)
     {
         // 固定金额
-        if ($this->type === self::TYPE_FIXED) {
+        if (self::TYPE_FIXED === $this->type) {
             // 为了保证系统健壮性，需要订单金额最少为 0.01 元
             return max(0.01, $orderAmount - $this->value);
         }

@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -7,7 +16,9 @@ use Illuminate\Database\Eloquent\Model;
 class Installment extends Model
 {
     const STATUS_PENDING = 'pending';
+
     const STATUS_REPAYING = 'repaying';
+
     const STATUS_FINISHED = 'finished';
 
     public static $statusMap = [
@@ -55,9 +66,9 @@ class Installment extends Model
         // 分期流水号前缀
         $prefix = date('YmdHis');
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 10; ++$i) {
             // 随机生成 6 位的数字
-            $no = $prefix . str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+            $no = $prefix.str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
             // 判断是否已经存在
             if (!static::query()->where('no', $no)->exists()) {
                 return $no;
@@ -75,9 +86,10 @@ class Installment extends Model
         // 重新加载 items，保证与数据库中数据同步
         $this->load(['items']);
         foreach ($this->items as $item) {
-            if ($item->paid_at && $item->refund_status !== InstallmentItem::REFUND_STATUS_SUCCESS) {
+            if ($item->paid_at && InstallmentItem::REFUND_STATUS_SUCCESS !== $item->refund_status) {
                 // 则将标志位记为 false
                 $allSuccess = false;
+
                 break;
             }
         }

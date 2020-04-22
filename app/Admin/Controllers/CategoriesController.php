@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Admin\Controllers;
 
 use App\Models\Category;
@@ -34,7 +43,7 @@ class CategoriesController extends AdminController
      */
     protected function grid()
     {
-        $grid = new Grid(new Category);
+        $grid = new Grid(new Category());
 
         $grid->column('id', 'ID');
         $grid->column('name', '名称');
@@ -55,6 +64,7 @@ class CategoriesController extends AdminController
      * Make a show builder.
      *
      * @param mixed $id
+     *
      * @return Show
      */
     protected function detail($id)
@@ -77,11 +87,12 @@ class CategoriesController extends AdminController
      * Make a form builder.
      *
      * @param bool $isEditing
+     *
      * @return Form
      */
     protected function form($isEditing = false)
     {
-        $form = new Form(new Category);
+        $form = new Form(new Category());
 
         $form->text('name', '类目名称')->rules('required');
 

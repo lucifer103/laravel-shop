@@ -1,10 +1,18 @@
 <?php
 
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Listeners;
 
 use App\Events\OrderReviewed;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use DB;
 use App\Models\OrderItem;
 
@@ -13,19 +21,15 @@ class UpdateProductRating implements ShouldQueue
 {
     /**
      * Create the event listener.
-     *
-     * @return void
      */
     public function __construct()
     {
-        //
     }
 
     /**
      * Handle the event.
      *
-     * @param  OrderReviewed  $event
-     * @return void
+     * @param OrderReviewed $event
      */
     public function handle(OrderReviewed $event)
     {
@@ -40,7 +44,7 @@ class UpdateProductRating implements ShouldQueue
                 })
                 ->first([
                     DB::raw('count(*) as review_count'),
-                    DB::raw('avg(rating) as rating')
+                    DB::raw('avg(rating) as rating'),
                 ]);
             // 更新商品的评分和评价数
             $item->product->update([

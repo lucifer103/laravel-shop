@@ -1,6 +1,13 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 use App\Models\CouponCode;
 use Faker\Generator as Faker;
@@ -9,10 +16,10 @@ $factory->define(CouponCode::class, function (Faker $faker) {
     // 首先随机取得一个类型
     $type = $faker->randomElement(array_keys(CouponCode::$typeMap));
     // 根据取得的类型生成对应折扣
-    $value = $type === CouponCode::TYPE_FIXED ? random_int(1, 200) : random_int(1, 50);
+    $value = CouponCode::TYPE_FIXED === $type ? random_int(1, 200) : random_int(1, 50);
 
     // 如果是固定金额，则最低订单金额必须要比优惠金额高 0.01 元
-    if ($type === CouponCode::TYPE_FIXED) {
+    if (CouponCode::TYPE_FIXED === $type) {
         $minAmount = $value + 0.01;
     } else {
         // 如果是百分比折扣，有 50% 概率不需要最低订单金额
@@ -25,7 +32,7 @@ $factory->define(CouponCode::class, function (Faker $faker) {
 
     return [
         // 随机生成名称
-        'name' => join(' ', $faker->words),
+        'name' => implode(' ', $faker->words),
         // 调用优惠码生成方法
         'code' => CouponCode::findAvailableCode(),
         'type' => $type,

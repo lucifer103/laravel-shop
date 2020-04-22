@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -8,7 +17,9 @@ use Carbon\Carbon;
 class SeckillProduct extends Model
 {
     protected $fillable = ['start_at', 'end_at'];
+
     protected $dates = ['start_at', 'end_at'];
+
     public $timestamps = true;
 
     public function product()

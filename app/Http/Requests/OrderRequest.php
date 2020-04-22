@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Http\Requests;
 
 use Illuminate\Validation\Rule;
@@ -27,7 +36,7 @@ class OrderRequest extends Request
                     if (!$sku->product->on_sale) {
                         return $fail('该商品未上架');
                     }
-                    if ($sku->stock === 0) {
+                    if (0 === $sku->stock) {
                         return $fail('该商品已售完');
                     }
                     // 获取当前索引

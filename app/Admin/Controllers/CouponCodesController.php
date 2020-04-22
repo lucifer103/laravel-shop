@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Admin\Controllers;
 
 use App\Models\CouponCode;
@@ -25,7 +34,7 @@ class CouponCodesController extends AdminController
      */
     protected function grid()
     {
-        $grid = new Grid(new CouponCode);
+        $grid = new Grid(new CouponCode());
 
         // 默认按创建时间倒序排序
         $grid->model()->orderBy('created_at', 'desc');
@@ -52,6 +61,7 @@ class CouponCodesController extends AdminController
      * Make a show builder.
      *
      * @param mixed $id
+     *
      * @return Show
      */
     protected function detail($id)
@@ -82,7 +92,7 @@ class CouponCodesController extends AdminController
      */
     protected function form()
     {
-        $form = new Form(new CouponCode);
+        $form = new Form(new CouponCode());
 
         $form->display('id', 'ID');
         $form->text('name', '名称')->rules('required');
@@ -96,7 +106,7 @@ class CouponCodesController extends AdminController
         });
         $form->radio('type', '类型')->options(CouponCode::$typeMap)->rules('required')->default(CouponCode::TYPE_FIXED);
         $form->text('value', '折扣')->rules(function ($form) {
-            if (request()->input('type') === CouponCode::TYPE_PERCENT) {
+            if (CouponCode::TYPE_PERCENT === request()->input('type')) {
                 // 如果选择了百分比折扣类型，那么折扣范围只能是 1 ~ 99
                 return 'required|numeric|between:1,99';
             } else {

@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Http\Controllers;
 
 use App\Models\Order;
@@ -53,6 +62,7 @@ class OrdersController extends Controller
     public function show(Order $order, Request $request)
     {
         $this->authorize('own', $order);
+
         return view('orders.show', ['order' => $order->load(['items.productSku', 'items.product'])]);
     }
 
@@ -62,7 +72,7 @@ class OrdersController extends Controller
         $this->authorize('own', $order);
 
         // 判断订单的发货状态是否为已发货
-        if ($order->ship_status !== Order::SHIP_STATUS_DELIVERED) {
+        if (Order::SHIP_STATUS_DELIVERED !== $order->ship_status) {
             throw new InvalidRequestException('发货状态不正确');
         }
 
@@ -127,11 +137,11 @@ class OrdersController extends Controller
             throw new InvalidRequestException('该订单未支付，不可退款');
         }
         // 众筹订单不允许申请退款
-        if ($order->type === Order::TYPE_CROWDFUNDING) {
+        if (Order::TYPE_CROWDFUNDING === $order->type) {
             throw new InvalidRequestException('众筹订单不支持退款');
         }
         // 判断订单退款状态是否正确
-        if ($order->refund_status !== Order::REFUND_STATUS_PENDING) {
+        if (Order::REFUND_STATUS_PENDING !== $order->refund_status) {
             throw new InvalidRequestException('该订单已申请过退款，请勿重复申请');
         }
         // 将用户输入的退款理由放到订单的 extra 字段中

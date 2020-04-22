@@ -1,16 +1,27 @@
 <?php
 
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
-use Moontoast\Math\BigNumber;
 
 class InstallmentItem extends Model
 {
     const REFUND_STATUS_PENDING = 'pending';
+
     const REFUND_STATUS_PROCESSING = 'processing';
+
     const REFUND_STATUS_SUCCESS = 'success';
+
     const REFUND_STATUS_FAILED = 'failed';
 
     public static $refundStatusMap = [

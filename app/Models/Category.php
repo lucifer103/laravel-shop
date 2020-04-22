@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -7,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
 class Category extends Model
 {
     protected $fillable = ['name', 'is_directory', 'level', 'path'];
+
     protected $casts = [
         'is_directory' => 'boolean',
     ];
@@ -15,7 +25,7 @@ class Category extends Model
     {
         parent::boot();
         // 监听 Category 的创建事件，用于初始化 path 和 level 字段值
-        static::creating(function (Category $category) {
+        static::creating(function (self $category) {
             // 如果创建的是一个根类目
             if (is_null($category->parent_id)) {
                 // 将层级设为 0
@@ -26,19 +36,19 @@ class Category extends Model
                 // 将层级设为父类目的层级 + 1
                 $category->level = $category->parent->level + 1;
                 // 将 path 值设为父类目的 path 追加父类目 ID 以及最后跟上一个 - 分隔符
-                $category->path = $category->parent->path . $category->parent_id . '-';
+                $category->path = $category->parent->path.$category->parent_id.'-';
             }
         });
     }
 
     public function parent()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(self::class);
     }
 
     public function children()
     {
-        return $this->hasMany(Category::class, 'parent_id');
+        return $this->hasMany(self::class, 'parent_id');
     }
 
     public function products()
@@ -58,7 +68,7 @@ class Category extends Model
     // 定义一个访问器，获取所有祖先类目并按层级排序
     public function getAncestorsAttribute()
     {
-        return Category::query()
+        return self::query()
             // 使用上面的访问器获取所有祖先类目 ID
             ->whereIn('id', $this->path_ids)
             // 按层级排序

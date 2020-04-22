@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Jobs;
 
 use Illuminate\Bus\Queueable;
@@ -13,14 +22,15 @@ use Illuminate\Support\Facades\Redis;
 // 代表这个类需要被放到队列中执行，而不是触发时立即执行
 class CloseOrder implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     protected $order;
 
     /**
      * Create a new job instance.
-     *
-     * @return void
      */
     public function __construct(Order $order, $delay)
     {
@@ -31,8 +41,6 @@ class CloseOrder implements ShouldQueue
 
     /**
      * Execute the job.
-     *
-     * @return void
      */
     // 定义这个任务类具体的执行逻辑
     // 当队列处理器从队列中取出任务时，会调用 handle() 方法
@@ -51,11 +59,11 @@ class CloseOrder implements ShouldQueue
             foreach ($this->order->items as $item) {
                 $item->productSku->addStock($item->amount);
                 // 当前订单类型是秒杀订单，并且对应商品已上架且尚未到截止时间
-                if ($item->order->type == Order::TYPE_SECKILL
+                if (Order::TYPE_SECKILL == $item->order->type
                     && $item->product->on_sale
                     && !$item->product->seckill->is_after_end) {
                     // 将 Redis 中的库存 + 1
-                    Redis::incr('seckill_sku_' . $item->productSku->id);
+                    Redis::incr('seckill_sku_'.$item->productSku->id);
                 }
             }
             if ($this->order->couponCode) {

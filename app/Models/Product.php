@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Models;
 
 use Illuminate\Support\Str;
@@ -9,7 +18,9 @@ use Illuminate\Support\Arr;
 class Product extends Model
 {
     const TYPE_NORMAL = 'normal';
+
     const TYPE_CROWDFUNDING = 'crowdfunding';
+
     const TYPE_SECKILL = 'seckill';
 
     public static $typeMap = [
@@ -19,7 +30,7 @@ class Product extends Model
     ];
 
     protected $fillable = [
-        'title', 
+        'title',
         'long_title',
         'description',
         'image',
@@ -48,6 +59,7 @@ class Product extends Model
         if (Str::startsWith($this->attributes['image'], ['http://', 'https://'])) {
             return $this->attributes['image'];
         }
+
         return \Storage::disk('public')->url($this->attributes['image']);
     }
 
@@ -107,7 +119,7 @@ class Product extends Model
         $arr['properties'] = $this->properties->map(function (ProductProperty $property) {
             // 增加一个 search_value 字段，用符号 : 将属性名和属性值拼接起来
             return array_merge(Arr::only($property->toArray(), ['name', 'value']), [
-                'search_value' => $property->name . ':' . $property->value,
+                'search_value' => $property->name.':'.$property->value,
             ]);
         });
 
@@ -117,7 +129,7 @@ class Product extends Model
     public function scopeByIds($query, $ids)
     {
         // orderByRaw 可以让我们用原生的 SQL 来给查询结果排序
-        return $query->whereIn('id', $ids)->orderByRaw(sprintf("FIND_IN_SET(id, '%s')", join(',', $ids)));
+        return $query->whereIn('id', $ids)->orderByRaw(sprintf("FIND_IN_SET(id, '%s')", implode(',', $ids)));
     }
 
     public function seckill()

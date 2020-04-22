@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Jobs;
 
 use Illuminate\Bus\Queueable;
@@ -15,14 +24,15 @@ use App\Exceptions\InternalException;
 // ShouldQueue 代表这是一个异步任务
 class RefundInstallmentOrder implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     protected $order;
 
     /**
      * Create a new job instance.
-     *
-     * @return void
      */
     public function __construct(Order $order)
     {
@@ -31,15 +41,13 @@ class RefundInstallmentOrder implements ShouldQueue
 
     /**
      * Execute the job.
-     *
-     * @return void
      */
     public function handle()
     {
         // 如果商品订单支付方式不是分期付款、订单未支付、订单退款状态不是退款中，则不执行后面的逻辑
-        if ($this->order->payment_method !== 'installment'
+        if ('installment' !== $this->order->payment_method
             || !$this->order->paid_at
-            || $this->order->refund_status !== Order::REFUND_STATUS_PROCESSING) {
+            || Order::REFUND_STATUS_PROCESSING !== $this->order->refund_status) {
             return;
         }
         // 找不到对应的分期付款，原则上不可能出现这种情况，这里的判断只是增加代码健壮性
@@ -59,7 +67,7 @@ class RefundInstallmentOrder implements ShouldQueue
             try {
                 $this->refundInstallmentItem($item);
             } catch (\Exception $e) {
-                \Log::warning('分期退款失败：' . $e->getMessage(), [
+                \Log::warning('分期退款失败：'.$e->getMessage(), [
                     'installment_item_id' => $item->id,
                 ]);
                 // 假如某个还款计划退款报错了，则暂时跳过，继续处理下一个还款计划的退款
@@ -72,7 +80,7 @@ class RefundInstallmentOrder implements ShouldQueue
     protected function refundInstallmentItem(InstallmentItem $item)
     {
         // 退款单号使用商品订单的退款号与当前还款计划的序号拼接而成
-        $refundNo = $this->order->refund_no . '_' . $item->sequence;
+        $refundNo = $this->order->refund_no.'_'.$item->sequence;
         // 根据还款计划的支付方式执行对应的退款逻辑
         switch ($item->payment_method) {
             case 'wechat':
@@ -92,6 +100,7 @@ class RefundInstallmentOrder implements ShouldQueue
                 $item->update([
                     'refund_status' => InstallmentItem::REFUND_STATUS_PROCESSING,
                 ]);
+
                 break;
             case 'alipay':
                 $ret = app('alipay')->refund([
@@ -113,10 +122,12 @@ class RefundInstallmentOrder implements ShouldQueue
                         'refund_status' => InstallmentItem::REFUND_STATUS_SUCCESS,
                     ]);
                 }
+
                 break;
             default:
                 // 原则上不可能出现，这个只是为了代码健壮性
-                throw new InternalException('未知订单支付：' . $item->paytment_method);
+                throw new InternalException('未知订单支付：'.$item->paytment_method);
+
                 break;
         }
     }

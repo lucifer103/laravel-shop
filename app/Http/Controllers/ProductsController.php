@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Http\Controllers;
 
 use App\Models\Product;
@@ -100,7 +109,7 @@ class ProductsController extends Controller
         // 返回一个 LengthAwarePaginator 对象
         $pager = new LengthAwarePaginator($products, $result['hits']['total']['value'], $perPage, $page, [
             // 手动构建分页的 url
-            'path' => route('products.index', false)
+            'path' => route('products.index', false),
         ]);
 
         return view('products.index', [
@@ -144,7 +153,6 @@ class ProductsController extends Controller
             ->limit(10)
             ->get();
 
-        
         $similarProductIds = $service->getSimilarProductIds($product, 4);
         // 根据 Elasticsearch 搜索出来的商品 ID 从数据库中读取商品数据
         $similarProducts = Product::query()->byIds($similarProductIds)->get();

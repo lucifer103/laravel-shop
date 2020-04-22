@@ -1,12 +1,19 @@
 <?php
 
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Console\Commands\Cron;
 
 use Illuminate\Console\Command;
 use App\Models\CrowdfundingProduct;
-use App\Models\Order;
 use Carbon\Carbon;
-use App\Services\OrderService;
 use App\Jobs\RefundCrowdfundingOrders;
 
 class FinishCrowdfunding extends Command
@@ -27,8 +34,6 @@ class FinishCrowdfunding extends Command
 
     /**
      * Create a new command instance.
-     *
-     * @return void
      */
     public function __construct()
     {

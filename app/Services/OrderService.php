@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Services;
 
 use App\Models\User;
@@ -165,6 +174,7 @@ class OrderService
                     'refund_no' => $refundNo,
                     'refund_status' => Order::REFUND_STATUS_PROCESSING,
                 ]);
+
                 break;
             case 'alipay':
                 // 退款订单号
@@ -196,6 +206,7 @@ class OrderService
                         'refund_status' => Order::REFUND_STATUS_SUCCESS,
                     ]);
                 }
+
                 break;
             case 'installment':
                 $order->update([
@@ -206,10 +217,12 @@ class OrderService
                 ]);
                 // 触发退款异步任务
                 dispatch(new RefundInstallmentOrder($order));
+
                 break;
             default:
                 // 原则上不可能出现，只是为了代码健壮性
-                throw new InternalException('未知订单支付方式：' . $order->payment_method);
+                throw new InternalException('未知订单支付方式：'.$order->payment_method);
+
                 break;
         }
     }
@@ -225,7 +238,7 @@ class OrderService
             $order = new Order([
                 // 将地址信息放入订单中
                 'address' => [
-                    'address' => $addressData['province'] . $addressData['city'] . $addressData['district'] . $addressData['address'],
+                    'address' => $addressData['province'].$addressData['city'].$addressData['district'].$addressData['address'],
                     'zip' => $addressData['zip'],
                     'contact_name' => $addressData['contact_name'],
                     'contact_phone' => $addressData['contact_phone'],
@@ -248,7 +261,7 @@ class OrderService
             $item->productSku()->associate($sku);
             $item->save();
 
-            Redis::decr('seckill_sku_' . $sku->id);
+            Redis::decr('seckill_sku_'.$sku->id);
 
             return $order;
         });

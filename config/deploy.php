@@ -1,7 +1,15 @@
 <?php
 
-return [
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
+return [
     /*
     |--------------------------------------------------------------------------
     | Default deployment strategy
@@ -29,7 +37,6 @@ return [
     */
 
     'strategies' => [
-        //
     ],
 
     /*
@@ -46,7 +53,6 @@ return [
     'hooks' => [
         // Right before we start deploying.
         'start' => [
-            //
         ],
 
         // Code and composer vendors are ready but nothing is built.
@@ -72,12 +78,10 @@ return [
 
         // Deployment succeeded.
         'success' => [
-            //
         ],
 
         // Deployment failed.
         'fail' => [
-            //
         ],
 
         // After a deployment has been rolled back.
@@ -138,7 +142,6 @@ return [
     */
 
     'localhost' => [
-        //
     ],
 
     /*
@@ -153,7 +156,7 @@ return [
     */
 
     'include' => [
-        'deploy.php'
+        'deploy.php',
     ],
 
     /*
@@ -168,5 +171,4 @@ return [
     */
 
     'custom_deployer_file' => false,
-
 ];

@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -8,7 +17,9 @@ class CrowdfundingProduct extends Model
 {
     // 定义众筹的 3 种状态
     const STATUS_FUNDING = 'funding';
+
     const STATUS_SUCCESS = 'success';
+
     const STATUS_FAIL = 'fail';
 
     public static $statusMap = [
@@ -18,6 +29,7 @@ class CrowdfundingProduct extends Model
     ];
 
     protected $fillable = ['total_amount', 'target_amount', 'user_count', 'status', 'end_at'];
+
     // ent_at 会自动转为 Carbon 类型
     protected $dates = ['end_at'];
 

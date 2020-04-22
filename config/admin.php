@@ -1,7 +1,15 @@
 <?php
 
-return [
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
+return [
     /*
     |--------------------------------------------------------------------------
     | Laravel-admin name
@@ -118,14 +126,13 @@ return [
     */
     // Laravel-Admin 用户认证设置
     'auth' => [
-
         'controller' => App\Admin\Controllers\AuthController::class,
 
         'guard' => 'admin',
 
         'guards' => [
             'admin' => [
-                'driver'   => 'session',
+                'driver' => 'session',
                 'provider' => 'admin',
             ],
         ],
@@ -133,7 +140,7 @@ return [
         'providers' => [
             'admin' => [
                 'driver' => 'eloquent',
-                'model'  => Encore\Admin\Auth\Database\Administrator::class,
+                'model' => Encore\Admin\Auth\Database\Administrator::class,
             ],
         ],
 
@@ -164,7 +171,6 @@ return [
     */
     // Laravel-Admin 文件上传设置
     'upload' => [
-
         // Disk in `config/filesystem.php`.
         // 对应 filesystem.php 中的 disks
         'disk' => 'public',
@@ -172,7 +178,7 @@ return [
         // Image and file upload path under the disk above.
         'directory' => [
             'image' => 'images',
-            'file'  => 'files',
+            'file' => 'files',
         ],
     ],
 
@@ -186,7 +192,6 @@ return [
     */
     // Laravel-Admin 数据库设置
     'database' => [
-
         // Database connection for following tables.
         // 数据库连接名称，留空即可
         'connection' => '',
@@ -213,11 +218,11 @@ return [
 
         // Pivot table for table above.
         // 多对多管理中间表
-        'operation_log_table'    => 'admin_operation_log',
+        'operation_log_table' => 'admin_operation_log',
         'user_permissions_table' => 'admin_user_permissions',
-        'role_users_table'       => 'admin_role_users',
+        'role_users_table' => 'admin_role_users',
         'role_permissions_table' => 'admin_role_permissions',
-        'role_menu_table'        => 'admin_role_menu',
+        'role_menu_table' => 'admin_role_menu',
     ],
 
     /*
@@ -230,7 +235,6 @@ return [
     */
     // Laravel-Admin 操作日志设置
     'operation_log' => [
-
         'enable' => true,
 
         /*
@@ -265,7 +269,7 @@ return [
     |--------------------------------------------------------------------------
     */
     // 菜单是否检查权限
-    'check_menu_roles'       => true,
+    'check_menu_roles' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -381,13 +385,10 @@ return [
     */
     // 也锁资源文件
     'minify_assets' => [
-
         // Assets will not be minified.
         // 不需要被压缩的资源
         'excepts' => [
-
         ],
-
     ],
 
     /*
@@ -470,9 +471,9 @@ return [
                     ],
                 ],
                 'theme' => 'snow',
-                'height' => '200px'
-            ]
-        ]
+                'height' => '200px',
+            ],
+        ],
         // 新增编辑器配置结束
     ],
 ];
