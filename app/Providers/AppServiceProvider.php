@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Providers;
 
 use Monolog\Logger;
@@ -12,8 +21,6 @@ class AppServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
-     *
-     * @return void
      */
     public function register()
     {
@@ -23,7 +30,7 @@ class AppServiceProvider extends ServiceProvider
             $config['notify_url'] = ngrok_url('payment.alipay.notify');
             $config['return_url'] = route('payment.alipay.return');
             // 判断当前项目运行环境是否为线上环境
-            if (app()->environment() !== 'production') {
+            if ('production' !== app()->environment()) {
                 $config['mode'] = 'dev';
                 $config['log']['level'] = Logger::DEBUG;
             } else {
@@ -36,7 +43,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton('wechat_pay', function () {
             $config = config('pay.wechat');
             $config['notify_url'] = ngrok_url('payment.wechat.notify');
-            if (app()->environment() !== 'production') {
+            if ('production' !== app()->environment()) {
                 $config['log']['level'] = Logger::DEBUG;
             } else {
                 $config['log']['level'] = Logger::WARNING;
@@ -50,7 +57,7 @@ class AppServiceProvider extends ServiceProvider
             // 从配置文件读取 Elasticsearch 服务器列表
             $builder = ESClientBuilder::create()->setHosts(config('database.elasticsearch.hosts'));
             // 如果是开发环境
-            if (app()->environment() === 'local') {
+            if ('local' === app()->environment()) {
                 // 配置日志，Elasticsearch 的请求和返回数据将打印到日志文件中，方便调试
                 $builder->setLogger(app('log')->driver());
             }
@@ -61,8 +68,6 @@ class AppServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap any application services.
-     *
-     * @return void
      */
     public function boot()
     {

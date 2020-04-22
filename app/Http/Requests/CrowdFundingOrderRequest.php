@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Http\Requests;
 
 use App\Models\CrowdfundingProduct;
@@ -24,17 +33,17 @@ class CrowdFundingOrderRequest extends Request
                         return $fail('该商品不存在');
                     }
                     // 众筹商品下单接口仅支持众筹商品的 SKU
-                    if ($sku->product->type !== Product::TYPE_CROWDFUNDING) {
+                    if (Product::TYPE_CROWDFUNDING !== $sku->product->type) {
                         return $fail('该商品不支持众筹');
                     }
                     if (!$sku->product->on_sale) {
                         return $fail('该商品未上架');
                     }
                     // 还需要判断众筹本身的状态，如果不是众筹中则无法下单
-                    if ($sku->product->crowdfunding->status !== CrowdfundingProduct::STATUS_FUNDING) {
+                    if (CrowdfundingProduct::STATUS_FUNDING !== $sku->product->crowdfunding->status) {
                         return $fail('该商品众筹已结束');
                     }
-                    if ($sku->stork === 0) {
+                    if (0 === $sku->stork) {
                         return $fail('该商品已售完');
                     }
                     if ($this->input('amount') > 0 && $sku->stock < $this->input('amount')) {

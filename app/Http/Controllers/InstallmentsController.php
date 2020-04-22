@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -9,7 +18,6 @@ use App\Events\OrderPaid;
 use Carbon\Carbon;
 use Endroid\QrCode\QrCode;
 use App\Models\InstallmentItem;
-use App\Models\Order;
 
 class InstallmentsController extends Controller
 {
@@ -27,6 +35,7 @@ class InstallmentsController extends Controller
         $this->authorize('own', $installment);
         // 取出当前分期付款的所有的还款计划，并按还款顺序排序
         $items = $installment->items()->orderBy('sequence')->get();
+
         return view('installments.show', [
             'installment' => $installment,
             'items' => $items,
@@ -40,7 +49,7 @@ class InstallmentsController extends Controller
         if ($installment->order->colsed) {
             throw new InvalidRequestException('对应的商品订单已被关闭');
         }
-        if ($installment->status === Installment::STATUS_FINISHED) {
+        if (Installment::STATUS_FINISHED === $installment->status) {
             throw new InvalidRequestException('该分期订单已结清');
         }
         // 获取当前分期付款最近的一个未支付的还款计划
@@ -52,9 +61,9 @@ class InstallmentsController extends Controller
         // 调用支付宝的网页支付
         return app('alipay')->web([
             // 支付订单号使用分期流水号 + 还款计划编号
-            'out_trade_no' => $installment->no . '_' . $nextItem->sequence,
+            'out_trade_no' => $installment->no.'_'.$nextItem->sequence,
             'total_amount' => $nextItem->total,
-            'subject' => '支付 Laravel Shop 的分期订单：' . $installment->no,
+            'subject' => '支付 Laravel Shop 的分期订单：'.$installment->no,
             // 这里的 notify_url 和 return_url 可以覆盖掉在 AppServiceProvider 设置的回调地址
             'notify_url' => ngrok_url('installments.alipay.notify'),
             'return_url' => route('installments.alipay.return'),
@@ -94,7 +103,7 @@ class InstallmentsController extends Controller
         if ($installment->order->closed) {
             throw new InvalidRequestException('对应的商品订单已被关闭');
         }
-        if ($installment->status === Installment::STATUS_FINISHED) {
+        if (Installment::STATUS_FINISHED === $installment->status) {
             throw new InvalidRequestException('该分期订单已结清');
         }
         if (!$nextItem = $installment->items()->whereNull('paid_at')->orderBy('sequence')->first()) {
@@ -102,9 +111,9 @@ class InstallmentsController extends Controller
         }
 
         $wechatOrder = app('wechat_pay')->scan([
-            'out_trade_no' => $installment->no . '_' . $nextItem->sequence,
+            'out_trade_no' => $installment->no.'_'.$nextItem->sequence,
             'total_fee' => $nextItem->total * 100,
-            'body' => '支付 Laravel Shop 的分期订单：' . $installment->no,
+            'body' => '支付 Laravel Shop 的分期订单：'.$installment->no,
             'notify_url' => ngrok_url('installments.wechat.notify'),
         ]);
 
@@ -146,7 +155,7 @@ class InstallmentsController extends Controller
             ]);
 
             // 如果这是第一笔还款
-            if ($item->sequence === 0) {
+            if (0 === $item->sequence) {
                 // 将分期付款的状态改为还款中
                 $installment->update(['status' => Installment::STATUS_REPAYING]);
                 // 将分期付款对应的商品订单状态改为已支付
@@ -206,7 +215,7 @@ class InstallmentsController extends Controller
         }
 
         // 如果退款成功
-        if ($data['refund_status'] === 'SUCCESS') {
+        if ('SUCCESS' === $data['refund_status']) {
             // 将还款计划退款状态改为退款成功
             $item->update([
                 'refund_status' => InstallmentItem::REFUND_STATUS_SUCCESS,

@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Exceptions;
 
 use Exception;
@@ -8,7 +17,7 @@ use Illuminate\Http\Request;
 
 class InvalidRequestException extends Exception
 {
-    public function __construct(string $message = "", int $code = 400, Throwable $previous = null)
+    public function __construct(string $message = '', int $code = 400, Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }

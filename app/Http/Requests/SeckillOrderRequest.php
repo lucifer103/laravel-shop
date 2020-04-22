@@ -1,11 +1,19 @@
 <?php
 
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Http\Requests;
 
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductSku;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Auth\AuthenticationException;
 use App\Exceptions\InvalidRequestException;
@@ -31,7 +39,7 @@ class SeckillOrderRequest extends Request
                 'required',
                 function ($attribute, $value, $fail) {
                     // 从 Redis 中读取数据
-                    $stock = Redis::get('seckill_sku_' . $value);
+                    $stock = Redis::get('seckill_sku_'.$value);
                     // 如果是 null 代表这个 SKU 不是秒杀商品
                     if (is_null($stock)) {
                         return $fail('该商品不存在');
@@ -44,7 +52,7 @@ class SeckillOrderRequest extends Request
                     // 大多数用户在上面的逻辑里就被拒绝了
                     // 因此下方的 SQL 查询不会对整体性能有太大影响
                     $sku = ProductSku::find($value);
-                    if ($sku->product->type !== Product::TYPE_SECKILL) {
+                    if (Product::TYPE_SECKILL !== $sku->product->type) {
                         return $fail('该商品不支持秒杀');
                     }
                     if ($sku->product->seckill->is_before_start) {
@@ -78,14 +86,14 @@ class SeckillOrderRequest extends Request
                                 ->orWhere('closed', false);
                         })
                         ->first()) {
-                            if ($order->paid_at) {
-                                return $fail('你已经抢购了该商品');
-                            }
-
-                            return $fail('你已经下单了该商品，请到订单页面支付');
+                        if ($order->paid_at) {
+                            return $fail('你已经抢购了该商品');
                         }
-                }
-            ]
+
+                        return $fail('你已经下单了该商品，请到订单页面支付');
+                    }
+                },
+            ],
         ];
     }
 }

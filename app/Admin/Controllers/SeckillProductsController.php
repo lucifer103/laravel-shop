@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Admin\Controllers;
 
 use App\Models\Product;
@@ -46,10 +55,10 @@ class SeckillProductsController extends CommonProductsController
                 // 如果秒杀商品已上架并且尚未到结束时间
                 if ($product->on_sale && $diff > 0) {
                     // 将剩余库存写入到 Redis 中，并设置该值国企时间为秒杀截止时间
-                    Redis::setex('seckill_sku_' . $sku->id, $diff, $sku->stock);
+                    Redis::setex('seckill_sku_'.$sku->id, $diff, $sku->stock);
                 } else {
                     // 否则将该 SKU 的库存值从 Redis 中删除
-                    Redis::del('seckill_sku_' . $sku->id);
+                    Redis::del('seckill_sku_'.$sku->id);
                 }
             });
         });

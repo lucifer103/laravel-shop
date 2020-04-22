@@ -1,6 +1,13 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 use App\Models\Order;
 use Faker\Generator as Faker;
@@ -44,7 +51,7 @@ $factory->define(Order::class, function (Faker $faker) {
         'closed' => false,
         'reviewed' => random_int(0, 10) > 2,
         'ship_status' => $ship,
-        'ship_data' => $ship === Order::SHIP_STATUS_PENDING ? null : [
+        'ship_data' => Order::SHIP_STATUS_PENDING === $ship ? null : [
             'express_company' => $faker->company,
             'express_no' => $faker->uuid,
         ],

@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -8,17 +17,25 @@ use Ramsey\Uuid\Uuid;
 class Order extends Model
 {
     const REFUND_STATUS_PENDING = 'pending';
+
     const REFUND_STATUS_APPLIED = 'applied';
+
     const REFUND_STATUS_PROCESSING = 'processing';
+
     const REFUND_STATUS_SUCCESS = 'success';
+
     const REFUND_STATUS_FAILED = 'failed';
 
     const SHIP_STATUS_PENDING = 'pending';
+
     const SHIP_STATUS_DELIVERED = 'delivered';
+
     const SHIP_STATUS_RECEIVED = 'received';
 
     const TYPE_NORMAL = 'normal';
+
     const TYPE_CROWDFUNDING = 'crowdfunding';
+
     const TYPE_SECKILL = 'seckill';
 
     public static $refundStatusMap = [
@@ -89,7 +106,7 @@ class Order extends Model
     {
         // 订单流水号前缀
         $prefix = date('YmdHis');
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 10; ++$i) {
             // 随机生成 6 位的数字
             $no = $prefix.str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
             // 判断是否已经存在

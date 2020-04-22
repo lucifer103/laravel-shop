@@ -1,35 +1,39 @@
 <?php
 
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Listeners;
 
 use App\Events\OrderPaid;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use App\Models\Order;
 
 class UpdateCrowdfundingProductProgress implements ShouldQueue
 {
     /**
      * Create the event listener.
-     *
-     * @return void
      */
     public function __construct()
     {
-        //
     }
 
     /**
      * Handle the event.
      *
-     * @param  OrderPaid  $event
-     * @return void
+     * @param OrderPaid $event
      */
     public function handle(OrderPaid $event)
     {
         $order = $event->getOrder();
         // 如果订单类型不是众筹商品订单，无需处理
-        if ($order->type !== Order::TYPE_CROWDFUNDING) {
+        if (Order::TYPE_CROWDFUNDING !== $order->type) {
             return;
         }
         $crowdfunding = $order->items[0]->product->crowdfunding;

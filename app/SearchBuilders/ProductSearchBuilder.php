@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\SearchBuilders;
 
 use App\Models\Category;
@@ -42,7 +51,7 @@ class ProductSearchBuilder
     {
         if ($category->is_directory) {
             $this->params['body']['query']['bool']['filter'][] = [
-                'prefix' => ['category_path' => $category->path  . $category->id . '-'],
+                'prefix' => ['category_path' => $category->path.$category->id.'-'],
             ];
         } else {
             $this->params['body']['query']['bool']['filter'][] = ['term' => ['category_id' => $category->id]];
@@ -111,7 +120,7 @@ class ProductSearchBuilder
             'nested' => [
                 'path' => 'properties',
                 'query' => [
-                    ['term' => ['properties.search_value' => $name . ':' . $value]],
+                    ['term' => ['properties.search_value' => $name.':'.$value]],
                 ],
             ],
         ];

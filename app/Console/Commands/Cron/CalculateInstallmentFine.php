@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Console\Commands\Cron;
 
 use Illuminate\Console\Command;
@@ -25,8 +34,6 @@ class CalculateInstallmentFine extends Command
 
     /**
      * Create a new command instance.
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -67,7 +74,7 @@ class CalculateInstallmentFine extends Command
                         ->getValue();
                     // 避免逾期费高于本金与手续费之和，使用 compareTo 方法来判断
                     // 如果 $fine 大于 $base，则 compareTo 会返回 1，相等返回 0，小于返回 -1
-                    $fine = big_number($fine)->compareTo($base) === 1 ? $base : $fine;
+                    $fine = 1 === big_number($fine)->compareTo($base) ? $base : $fine;
                     $item->update([
                         'fine' => $fine,
                     ]);

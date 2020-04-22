@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -10,6 +19,6 @@ return [
     |
     */
     'max_file_size' => 52428800, // size in Byte
-    'pattern'       => env('LOGVIEWER_PATTERN', '*.log'),
-    'storage_path'  => env('LOGVIEWER_STORAGE_PATH', storage_path('logs')),
+    'pattern' => env('LOGVIEWER_PATTERN', '*.log'),
+    'storage_path' => env('LOGVIEWER_STORAGE_PATH', storage_path('logs')),
 ];

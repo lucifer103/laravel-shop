@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Admin\Controllers;
 
 use App\Http\Requests\Admin\HandleRefundRequest;
@@ -12,7 +21,6 @@ use Encore\Admin\Layout\Content;
 use Illuminate\Http\Request;
 use App\Exceptions\InvalidRequestException;
 use Illuminate\Foundation\Validation\ValidatesRequests;
-use App\Exceptions\InternalException;
 use App\Models\CrowdfundingProduct;
 use App\Services\OrderService;
 
@@ -34,7 +42,7 @@ class OrdersController extends AdminController
      */
     protected function grid()
     {
-        $grid = new Grid(new Order);
+        $grid = new Grid(new Order());
 
         // 只展示已支付的订单，并且默认按支付时间倒序排列
         $grid->model()->whereNotNull('paid_at')->orderBy('paid_at', 'desc');
@@ -78,12 +86,12 @@ class OrdersController extends AdminController
             throw new InvalidRequestException('该订单未付款');
         }
         // 判断当前订单发货状态是否为未发货
-        if ($order->ship_status !== Order::SHIP_STATUS_PENDING) {
+        if (Order::SHIP_STATUS_PENDING !== $order->ship_status) {
             throw new InvalidRequestException('该订单已发货');
         }
         // 众筹订单只有在众筹成功之后发货
-        if ($order->type === Order::TYPE_CROWDFUNDING &&
-            $order->items[0]->product->crowdfunding->status !== CrowdfundingProduct::STATUS_SUCCESS) {
+        if (Order::TYPE_CROWDFUNDING === $order->type &&
+            CrowdfundingProduct::STATUS_SUCCESS !== $order->items[0]->product->crowdfunding->status) {
             throw new InvalidRequestException('众筹订单只能在众筹成功之后发货');
         }
         // Laravel 5.5 之后 validate 方法可以返回校验过的值
@@ -109,7 +117,7 @@ class OrdersController extends AdminController
     public function handleRefund(Order $order, HandleRefundRequest $request, OrderService $orderService)
     {
         // 判断订单状态是否正确
-        if ($order->refund_status !== Order::REFUND_STATUS_APPLIED) {
+        if (Order::REFUND_STATUS_APPLIED !== $order->refund_status) {
             throw new InvalidRequestException('订单状态不正确');
         }
         // 是否同意退款
@@ -140,6 +148,7 @@ class OrdersController extends AdminController
      * Make a show builder.
      *
      * @param mixed $id
+     *
      * @return Show
      */
     protected function detail($id)
@@ -175,7 +184,7 @@ class OrdersController extends AdminController
      */
     protected function form()
     {
-        $form = new Form(new Order);
+        $form = new Form(new Order());
 
         $form->text('no', __('No'));
         $form->number('user_id', __('User id'));

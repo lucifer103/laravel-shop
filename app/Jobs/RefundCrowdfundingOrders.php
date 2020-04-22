@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Jobs;
 
 use Illuminate\Bus\Queueable;
@@ -14,14 +23,15 @@ use App\Services\OrderService;
 // ShouldQueue 代表此任务需要异步执行
 class RefundCrowdfundingOrders implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     protected $crowdfunding;
 
     /**
      * Create a new job instance.
-     *
-     * @return void
      */
     public function __construct(CrowdfundingProduct $crowdfunding)
     {
@@ -30,14 +40,12 @@ class RefundCrowdfundingOrders implements ShouldQueue
 
     /**
      * Execute the job.
-     *
-     * @return void
      */
     public function handle()
     {
         logger($this->crowdfunding);
         // 如果众筹的状态不是失败则不执行退款，原则上不会发生，这里只是增加健壮性
-        if ($this->crowdfunding->status !== CrowdfundingProduct::STATUS_FAIL) {
+        if (CrowdfundingProduct::STATUS_FAIL !== $this->crowdfunding->status) {
             return;
         }
 

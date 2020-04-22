@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Admin\Controllers;
 
 use App\Models\User;
@@ -24,7 +33,7 @@ class UsersController extends AdminController
      */
     protected function grid()
     {
-        $grid = new Grid(new User);
+        $grid = new Grid(new User());
 
         // 创建一个列名为 ID 的列，内容是用户的 id 字段
         $grid->id('ID');
@@ -60,6 +69,7 @@ class UsersController extends AdminController
      * Make a show builder.
      *
      * @param mixed $id
+     *
      * @return Show
      */
     protected function detail($id)
@@ -85,7 +95,7 @@ class UsersController extends AdminController
      */
     protected function form()
     {
-        $form = new Form(new User);
+        $form = new Form(new User());
 
         $form->text('name', __('Name'));
         $form->email('email', __('Email'));

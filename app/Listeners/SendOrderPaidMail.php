@@ -1,11 +1,18 @@
 <?php
 
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Listeners;
 
 use App\Events\OrderPaid;
-use App\Models\Order;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use App\Notifications\OrderPaidNotification;
 
 // implements ShouldQueue 代表异步监听器
@@ -13,19 +20,15 @@ class SendOrderPaidMail implements ShouldQueue
 {
     /**
      * Create the event listener.
-     *
-     * @return void
      */
     public function __construct()
     {
-        //
     }
 
     /**
      * Handle the event.
      *
-     * @param  OrderPaid  $event
-     * @return void
+     * @param OrderPaid $event
      */
     public function handle(OrderPaid $event)
     {

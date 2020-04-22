@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the lucifer103/larave-shop.
+ *
+ * (c) Lucifer<luciferi103@outlook.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -25,7 +34,7 @@ class PaymentController extends Controller
         return app('alipay')->web([
             'out_trade_no' => $order->no,   // 订单编号，需保证在商户端不重复
             'total_amount' => $order->total_amount, // 订单金额，单位元，支持小数点后两位
-            'subject' => '支付 Laravel Shop 的订单：' . $order->no,   // 订单标题
+            'subject' => '支付 Laravel Shop 的订单：'.$order->no,   // 订单标题
         ]);
     }
 
@@ -67,7 +76,7 @@ class PaymentController extends Controller
         $order->update([
             'paid_at' => Carbon::now(), // 支付时间
             'payment_method' => 'alipay',    // 支付方式
-            'payment_no' => $data->trade_no // 支付宝订单号
+            'payment_no' => $data->trade_no, // 支付宝订单号
         ]);
 
         $this->afterPaid($order);
@@ -91,7 +100,7 @@ class PaymentController extends Controller
             // 与支付宝不同，微信支付的金额单位是分
             'total_fee' => $order->total_amount * 100,
             // 订单描述
-            'body' => '支付 Laravel Shop 的订单：' . $order->no,
+            'body' => '支付 Laravel Shop 的订单：'.$order->no,
         ]);
 
         // 把要转化的字符串作为 QrCode 的构造函数参数
@@ -138,14 +147,14 @@ class PaymentController extends Controller
     {
         // 给微信的失败响应
         $failXml = '<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[FAIL]]></return_msg></xml>';
-        
+
         $data = app('wechat_pay')->verify(null, true);
         // 没有找到对应的订单，原则上不可能发生，保证代码健壮性
         if (!$order = Order::where('no', $data['out_trade_no'])->first()) {
             return $failXml;
         }
 
-        if ($data['refund_status'] === 'SUCCESS') {
+        if ('SUCCESS' === $data['refund_status']) {
             // 退款成功，将订单退款状态改成退款成功
             $order->update([
                 'refund_status' => Order::REFUND_STATUS_SUCCESS,
@@ -211,7 +220,7 @@ class PaymentController extends Controller
         // 计算每一期的手续费
         $fee = big_number($base)->multiply($installment->fee_rate)->divide(100)->getValue();
         // 根据用户选择的还款期数，创建对应数量的还款计划
-        for ($i = 0; $i < $count; $i++) {
+        for ($i = 0; $i < $count; ++$i) {
             // 最后一期的本金需要用总本金减去前面几期的本金
             if ($i === $count - 1) {
                 $base = big_number($order->total_amount)->subtract(big_number($base)->multiply($count - 1));
