@@ -14,3 +14,12 @@ const mix = require('laravel-mix');
 mix.js('resources/js/app.js', 'public/js')
    .sass('resources/sass/app.scss', 'public/css')
    .version();
+
+// 虚拟机中 npm run watch-poll 占用 cpu 过高
+if(Mix.isWatching()){
+   mix.webpackConfig({
+         watchOptions:{
+            ignored : /node_modules/,
+         },
+   })
+}
