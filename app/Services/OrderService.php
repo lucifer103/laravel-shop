@@ -222,7 +222,6 @@ class OrderService
             default:
                 // 原则上不可能出现，只是为了代码健壮性
                 throw new InternalException('未知订单支付方式：'.$order->payment_method);
-
                 break;
         }
     }

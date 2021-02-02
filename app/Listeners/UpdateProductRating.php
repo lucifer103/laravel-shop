@@ -28,8 +28,6 @@ class UpdateProductRating implements ShouldQueue
 
     /**
      * Handle the event.
-     *
-     * @param OrderReviewed $event
      */
     public function handle(OrderReviewed $event)
     {

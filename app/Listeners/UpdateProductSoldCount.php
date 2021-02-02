@@ -28,8 +28,6 @@ class UpdateProductSoldCount implements ShouldQueue
     /**
      * Handle the event.
      * Laravel 会默认执行监听器的 handle 方法，触发的事件会作为 handle 方法的参数.
-     *
-     * @param OrderPaid $event
      */
     public function handle(OrderPaid $event)
     {

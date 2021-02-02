@@ -26,8 +26,6 @@ class UpdateCrowdfundingProductProgress implements ShouldQueue
 
     /**
      * Handle the event.
-     *
-     * @param OrderPaid $event
      */
     public function handle(OrderPaid $event)
     {

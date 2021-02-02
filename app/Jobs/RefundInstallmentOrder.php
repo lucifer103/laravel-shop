@@ -127,7 +127,6 @@ class RefundInstallmentOrder implements ShouldQueue
             default:
                 // 原则上不可能出现，这个只是为了代码健壮性
                 throw new InternalException('未知订单支付：'.$item->paytment_method);
-
                 break;
         }
     }

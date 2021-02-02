@@ -22,8 +22,6 @@ class InstallmentPolicy
     /**
      * Determine whether the user can view any installments.
      *
-     * @param \App\Models\User $user
-     *
      * @return mixed
      */
     public function viewAny(User $user)
@@ -32,9 +30,6 @@ class InstallmentPolicy
 
     /**
      * Determine whether the user can view the installment.
-     *
-     * @param \App\Models\User        $user
-     * @param \App\Models\Installment $installment
      *
      * @return mixed
      */
@@ -45,8 +40,6 @@ class InstallmentPolicy
     /**
      * Determine whether the user can create installments.
      *
-     * @param \App\Models\User $user
-     *
      * @return mixed
      */
     public function create(User $user)
@@ -55,9 +48,6 @@ class InstallmentPolicy
 
     /**
      * Determine whether the user can update the installment.
-     *
-     * @param \App\Models\User        $user
-     * @param \App\Models\Installment $installment
      *
      * @return mixed
      */
@@ -68,9 +58,6 @@ class InstallmentPolicy
     /**
      * Determine whether the user can delete the installment.
      *
-     * @param \App\Models\User        $user
-     * @param \App\Models\Installment $installment
-     *
      * @return mixed
      */
     public function delete(User $user, Installment $installment)
@@ -80,9 +67,6 @@ class InstallmentPolicy
     /**
      * Determine whether the user can restore the installment.
      *
-     * @param \App\Models\User        $user
-     * @param \App\Models\Installment $installment
-     *
      * @return mixed
      */
     public function restore(User $user, Installment $installment)
@@ -91,9 +75,6 @@ class InstallmentPolicy
 
     /**
      * Determine whether the user can permanently delete the installment.
-     *
-     * @param \App\Models\User        $user
-     * @param \App\Models\Installment $installment
      *
      * @return mixed
      */
